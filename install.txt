@@ -1,0 +1,5 @@
+1. cifs-samba-mount
+2. git
+3. docker
+4. docker-compose
+5. java
