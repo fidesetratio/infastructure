@@ -37,6 +37,9 @@ sudo apt install kibana
 sudo systemctl enable kibana
 sudo systemctl start kibana
 
+sudo nano /etc/kibana/kibana.yml
+to 0.0.0.0
+
 7. Pake secure passwd
 echo "kibanaadmin:`openssl passwd -apr1`" | sudo tee -a /etc/nginx/htpasswd.users
 
@@ -58,4 +61,54 @@ echo "kibanaadmin:`openssl passwd -apr1`" | sudo tee -a /etc/nginx/htpasswd.user
     }
 }
 
+9. sudo apt install logstash
+10. folder that you need to check
+/etc/logstash/conf.d
+11. sudo nano /etc/logstash/conf.d/02-beats-input.conf
+12.input {
+  beats {
+    port => 5044
+  }
+}
+13. Next, create a configuration file called 30-elasticsearch-output.conf
+14.sudo nano /etc/logstash/conf.d/30-elasticsearch-output.conf
+15. output {
+  if [@metadata][pipeline] {
+    elasticsearch {
+    hosts => ["localhost:9200"]
+    manage_template => false
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+    pipeline => "%{[@metadata][pipeline]}"
+    }
+  } else {
+    elasticsearch {
+    hosts => ["localhost:9200"]
+    manage_template => false
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+    }
+  }
+}
 
+16. sudo systemctl start logstash
+17. sudo systemctl enable logstash
+18. sudo apt install filebeat
+19. Remember we will go to filebeat not directly to Elastic Search
+20. sudo nano /etc/filebeat/filebeat.yml
+21. commet this (due to we fokus to filebeat)
+
+...
+#output.elasticsearch:
+  # Array of hosts to connect to.
+  #hosts: ["localhost:9200"]
+...
+
+
+22. Uncomment this 
+
+output.logstash:
+  # The Logstash hosts
+  hosts: ["localhost:5044"]
+
+23.sudo filebeat modules enable system
+24. sudo filebeat modules list
+25. 

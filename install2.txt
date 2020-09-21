@@ -1,0 +1,16 @@
+1. Java 1.8
+2. ELK (ElasticSearch Logstash Kibana)	& File beat 
+3. Maven
+4. Docker
+5. Docker Compose
+6. cifs-samba-mount
+7. Git
+
+8. Jenkins
+9. Redis
+10.Kafka
+11.ActiveMQ
+12.Mysql
+13.PostgreSQL
+14.Prometheous
+
